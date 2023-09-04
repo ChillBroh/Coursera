@@ -55,7 +55,32 @@ router.post("/", (req, res) => {
 });
 
 // PUT request: Update the details of a user by email ID
-router.put("/:email", (req, res) => {});
+router.put("/:email", (req, res) => {
+  let mail = req.params.email;
+  let other_users = users.filter((user) => user.email !== mail);
+  let user = users.filter((user) => user.email === mail);
+
+  if (user.length > 0) {
+    let first = req.query.firstName;
+    let last = req.query.lastName;
+    let email = req.query.email;
+    let dob = req.query.DOB;
+
+    res.send(first, last, email, dob);
+
+    user.firstName = first;
+    user.lastName = last;
+    user.email = email;
+    user.DOB = dob;
+
+    users.push(other_users);
+    users.push(user);
+
+    res.send(`User ${first} has been Updated! New Details are ${user}`);
+  } else {
+    res.send("User Not Found!");
+  }
+});
 
 // DELETE request: Delete a user by email ID
 router.delete("/:email", (req, res) => {
